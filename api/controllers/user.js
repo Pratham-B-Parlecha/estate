@@ -21,7 +21,7 @@ export const getUser = async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Failed to get users" });
+    res.status(500).json({ message: "Failed to get user" });
   }
 };
 export const updateUser = async (req, res) => {
@@ -52,7 +52,7 @@ export const updateUser = async (req, res) => {
     res.status(200).json(updateUser);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Failed to get users" });
+    res.status(500).json({ message: "Failed to update users" });
   }
 };
 export const deleteUser = async (req, res) => {
@@ -71,6 +71,6 @@ export const deleteUser = async (req, res) => {
     res.status(200).json({message: "User deleted successfully"})
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Failed to get users" });
+    res.status(500).json({ message: "Failed to delete users" });
   }
 };
