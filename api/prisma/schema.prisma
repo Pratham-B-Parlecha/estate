@@ -80,3 +80,8 @@ model savedPost {
 
   @@unique([userId, postId])
 }
+
+model chat {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+}

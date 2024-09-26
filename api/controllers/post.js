@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma.js";
 
 export const getPosts = async (req, res) => {
@@ -36,7 +37,27 @@ export const getPost = async (req, res) => {
         }
       },
     });
-    res.status(200).json(post);
+
+    const token = req.cookies?.token;
+    if (token) {
+      jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {
+        if (!err) {
+          const saved = await prisma.savedPost.findUnique({
+            where: {
+              userId_postId: {
+                userId: payload.id,
+                postId: id
+              }
+            }
+          });
+          return res.status(200).json({ ...post, isSaved: saved ? true : false });
+        } else {
+          return res.status(200).json({ ...post, isSaved: false });
+        }
+      });
+    } else {
+      return res.status(200).json({ ...post, isSaved: false });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Failed to get post" });
@@ -78,7 +99,7 @@ export const deletePost = async (req, res) => {
     if (post.userId !== tokenUserId) {
       return res.status(403).json({ message: "Not authorized" });
     }
-    const deletePost = await prisma.post.delete({
+     await prisma.post.delete({
       where: { id },
     });
     res.status(200).json({ message: "Post deleted" });
